@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Zotvim",
+  "version": "0.3.0",
+  "description": "Navigate Zotero's library and PDF viewer with Vim keys. No modes, no extra processes.",
+  "applications": {
+    "zotero": {
+      "id": "zotvim@zotvim.local",
+      "update_url": "https://example.invalid/zotvim/updates.json",
+      "strict_min_version": "8.0",
+      "strict_max_version": "*"
+    }
+  }
+}

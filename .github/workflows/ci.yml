@@ -1,0 +1,71 @@
+name: Check and package
+
+"on":
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 24]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: npm test
+      - run: npm run check
+      - name: Check release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          version = json.loads(Path("package.json").read_text())["version"]
+          expected = "v" + version
+          actual = os.environ["GITHUB_REF_NAME"]
+          if actual != expected:
+              raise SystemExit(f"Tag {actual!r} must match {expected!r}")
+          PY
+      - run: npm run build
+      - uses: actions/upload-artifact@v7
+        if: matrix.node == 24
+        with:
+          name: zotvim-xpi
+          path: dist/*.xpi
+          if-no-files-found: error
+
+  release:
+    name: Publish XPI
+    needs: check
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: zotvim-xpi
+          path: dist
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/*.xpi --verify-tag --title "$RELEASE_TAG" --generate-notes

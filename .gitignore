@@ -1,0 +1,12 @@
+/dist/
+node_modules/
+__pycache__/
+*.pyc
+*.log
+.nvimlog
+.DS_Store
+.env
+.env.*
+/.agents/
+/.codex/
+/.aws/

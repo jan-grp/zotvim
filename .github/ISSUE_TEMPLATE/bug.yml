@@ -1,0 +1,46 @@
+name: Bug report
+description: Report a binding or navigation failure.
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Zotero and Zotvim versions
+      placeholder: Zotero 9.0.6, Zotvim 0.3.0
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Operating system
+      description: Include the version and, on Linux, the desktop and X11 or Wayland session.
+    validations:
+      required: true
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where does it happen?
+      options:
+        - Library
+        - PDF tab
+        - Split PDF pane
+        - Separate PDF window
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the keys pressed and any focus or window changes.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant errors or screenshots

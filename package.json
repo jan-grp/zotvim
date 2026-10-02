@@ -1,0 +1,13 @@
+{
+  "name": "zotvim",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Vim-style library and PDF navigation inside Zotero 8 and newer",
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/run.cjs",
+    "check": "node scripts/check.mjs",
+    "build": "python3 scripts/build.py"
+  },
+  "engines": { "node": ">=20" }
+}
